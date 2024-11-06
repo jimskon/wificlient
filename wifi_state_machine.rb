@@ -1439,8 +1439,8 @@ def pifi_management
   # The hash of the config currently running on the device
   @config_digest = ""
   # kill hostapd, wlanbridge and radius client by name
-  `pkill -f hostapd`
-  `pkill -f wlanbridge`
+  `killall hostapd`
+  # `pkill -f wlanbridge`
   # `pkill -f radius_client.rb`
 
   # sleep to allow system to recover from killing hostapd and wlanbridge.
@@ -1460,7 +1460,7 @@ def pifi_management
     print "New interface ", interface[:wlan], "\n"
     hostapd_procs[interface[:wlan]] = Hostapd_instance.new(interface[:wlan])
   end
-  wlanbridge_proc = Wlanbridge_instance.new
+  # wlanbridge_proc = Wlanbridge_instance.new
   # radiusclient_proc = Radiusclient_instance.new()
 
   # Get our local MAC and controller address
@@ -1699,12 +1699,12 @@ def pifi_management
           end
         end
         # Restart wlanbridge if an interface changed
-        if interface_change or !wlanbridge_proc.is_running
-          print "INTERFACE CHANGE!", "\n"
-          wlanbridge_proc.stop
-          sleep(1)
-          wlanbridge_proc.run(active_interfaces, static_vids)
-        end
+        #if interface_change or !wlanbridge_proc.is_running
+        #  print "INTERFACE CHANGE!", "\n"
+        #  wlanbridge_proc.stop
+        #  sleep(1)
+        #  wlanbridge_proc.run(active_interfaces, static_vids)
+        #end
 
         # Start Radius Client
         # if !radiusclient_proc.is_running
@@ -1750,11 +1750,11 @@ def pifi_management
           break
         end
 
-        if !wlanbridge_proc.is_running
-          puts "wlanbridge has unexpectedly stopped"
-          state.update(STATES::DISABLING)
-          break
-        end
+        #if !wlanbridge_proc.is_running
+        #  puts "wlanbridge has unexpectedly stopped"
+        #  state.update(STATES::DISABLING)
+        #  break
+        #end
 
         # if not radiusclient_proc.is_running
         #  puts "Radius Client has unexpectedly stopped. Restarting."
@@ -1831,9 +1831,9 @@ def pifi_management
         end
       end
 
-      if wlanbridge_proc.is_running
-        wlanbridge_proc.stop
-      end
+      #if wlanbridge_proc.is_running
+      #  wlanbridge_proc.stop
+      #end
 
       # if radiusclient_proc.is_running
       #  radiusclient_proc.stop()
@@ -1857,7 +1857,7 @@ def pifi_management
     print "Stopping hostapd on ", interface, "\n"
     hostapd_proc.stop
   end
-  wlanbridge_proc.stop
+  # wlanbridge_proc.stop
   # radiusclient_proc.stop()
 
   # response = Client.get(mesg)
@@ -1898,7 +1898,7 @@ $logger.info { "PIFI STATE MACHINE Version #{MAJOR}.#{MINOR}.#{REVISION}" }
 $logger.info { "Running Directory: '#{__dir__}/'." }
 
 # Update radios
-update_usb_radios
+# update_usb_radios
 
 # Main running loop. In case exception occurrs, log it and continue.
 # CTRL+C Trap toggles should_run
